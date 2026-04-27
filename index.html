@@ -2,36 +2,121 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Teleprompter QP</title>
-<link rel="stylesheet" href="styles.css">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#020617">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Teleprompter QP PRO">
+<title>Teleprompter QP PRO</title>
+<style>
+:root{--bg:#020617;--panel:#0f172a;--text:#f8fafc;--muted:#94a3b8;--accent:#38bdf8;--border:rgba(255,255,255,.12)}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:radial-gradient(circle at top,#1e3a8a 0,#020617 45%,#000 100%);color:var(--text)}
+body.light{--panel:#fff;--text:#0f172a;--muted:#475569;--border:rgba(15,23,42,.15);background:#f8fafc}
+header{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid var(--border);background:rgba(2,6,23,.75);backdrop-filter:blur(14px);position:sticky;top:0;z-index:10}
+body.light header{background:rgba(255,255,255,.85)}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,#38bdf8,#1d4ed8);display:grid;place-items:center;font-weight:900;color:white}
+h1{margin:0;font-size:19px} header p{margin:3px 0 0;color:var(--muted);font-size:12px}
+main{display:grid;grid-template-columns:390px 1fr;gap:16px;padding:16px;min-height:calc(100vh - 82px)}
+.card{background:rgba(15,23,42,.86);border:1px solid var(--border);border-radius:24px;padding:16px;box-shadow:0 20px 45px rgba(0,0,0,.28)}
+body.light .card{background:#fff}
+label{display:block;color:var(--muted);font-size:13px;margin:0 0 8px}
+textarea{width:100%;height:275px;border:1px solid var(--border);border-radius:18px;background:rgba(15,23,42,.82);color:var(--text);padding:14px;font-size:16px;line-height:1.45;resize:vertical;outline:none}
+body.light textarea{background:#f8fafc}
+.row{display:grid;grid-template-columns:1fr 76px;gap:10px;align-items:center;margin:13px 0}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.value{background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:12px;padding:8px;text-align:center;color:var(--muted);font-size:12px}
+.buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+button{border:0;border-radius:16px;padding:13px 14px;font-weight:800;background:var(--accent);color:#001018;font-size:14px;cursor:pointer}
+button.secondary{background:rgba(255,255,255,.10);color:var(--text);border:1px solid var(--border)}
+button.danger{background:#fb7185;color:white}
+.template{background:rgba(255,255,255,.07);border:1px solid var(--border);color:var(--text);text-align:left;font-weight:700;margin-top:8px;width:100%}
+.stage{position:relative;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;min-height:calc(100vh - 116px)}
+.guide{position:absolute;top:43%;left:0;right:0;height:82px;border-top:2px solid rgba(56,189,248,.65);border-bottom:2px solid rgba(56,189,248,.65);background:rgba(56,189,248,.05);pointer-events:none;z-index:3}
+#prompter{width:82%;font-size:56px;line-height:1.42;font-weight:800;text-align:center;white-space:pre-wrap;transform:translateY(70vh);will-change:transform;padding-bottom:100vh}
+.hint{font-size:12px;color:var(--muted);line-height:1.5;margin-top:14px}
+.full header,.full .editor{display:none}.full main{display:block;padding:0;min-height:100vh}.full .stage{height:100vh;border-radius:0;border:0}.full #prompter{font-size:64px}
+.countdown{position:absolute;inset:0;display:none;place-items:center;background:rgba(0,0,0,.72);z-index:20;font-size:24vw;font-weight:900}
+.recordDot{position:absolute;top:18px;right:18px;display:none;gap:8px;align-items:center;background:rgba(0,0,0,.45);border:1px solid var(--border);padding:8px 12px;border-radius:999px;color:white;font-size:12px;z-index:6}
+.dot{width:10px;height:10px;border-radius:50%;background:#ef4444;box-shadow:0 0 16px #ef4444}
+.recording .recordDot{display:flex}
+@media(max-width:850px){main{grid-template-columns:1fr}.stage{height:70vh;min-height:520px}#prompter{font-size:44px;width:88%}.full #prompter{font-size:52px}}
+</style>
 </head>
 <body>
-
 <header>
-<h1>Teleprompter QP</h1>
-<p>Dr José Alan Polanco</p>
+<div class="brand"><div class="logo">QP</div><div><h1>Teleprompter QP PRO</h1><p>Reels médicos · clases · videos profesionales</p></div></div>
+<button class="secondary" id="fullscreenBtn">Pantalla completa</button>
 </header>
+<main>
+<section class="card editor">
+<label for="script">Guion</label>
+<textarea id="script">¿Dolor de rodilla al subir escaleras?
 
-<textarea id="texto">¿Dolor de rodilla al subir escaleras?
+No siempre significa desgaste avanzado.
 
-No siempre es desgaste.
+Puede ser sobrecarga, debilidad muscular, mala mecánica o una lesión que sí tiene tratamiento.
 
-Puede ser sobrecarga muscular, mala mecánica o lesión tratable.
+La clave es no acostumbrarte al dolor.
 
-Acude a valoración profesional.</textarea>
-
-<div class="controles">
-<label>Velocidad</label>
-<input type="range" id="velocidad" min="1" max="10" value="4">
-
-<button onclick="iniciar()">▶ Iniciar</button>
-<button onclick="pausar()">⏸ Pausar</button>
-<button onclick="reiniciar()">⏹ Reiniciar</button>
+En QP Clinic te ayudamos a encontrar la causa y darte un plan claro.</textarea>
+<div class="row"><label>Velocidad <input type="range" id="speed" min="10" max="180" value="58"></label><div class="value" id="speedValue">58</div></div>
+<div class="row"><label>Tamaño de letra <input type="range" id="fontSize" min="28" max="100" value="56"></label><div class="value" id="fontValue">56</div></div>
+<div class="row"><label>Ancho de texto <input type="range" id="width" min="50" max="98" value="82"></label><div class="value" id="widthValue">82%</div></div>
+<div class="buttons">
+<button id="startBtn">▶ Iniciar</button><button class="secondary" id="pauseBtn">⏸ Pausar</button>
+<button class="secondary" id="resetBtn">↺ Reiniciar</button><button class="secondary" id="mirrorBtn">⇄ Espejo</button>
+<button class="secondary" id="themeBtn">☀ Claro/Oscuro</button><button class="danger" id="clearBtn">Borrar</button>
 </div>
+<button class="template" data-template="rodilla">Plantilla reel: dolor de rodilla</button>
+<button class="template" data-template="glp1">Plantilla reel: GLP-1</button>
+<button class="template" data-template="fisio">Plantilla reel: fisioterapia</button>
+<p class="hint">iPhone: abre esta página en Safari → Compartir → Agregar a pantalla de inicio.</p>
+</section>
+<section class="card stage" id="stage"><div class="guide"></div><div class="recordDot"><span class="dot"></span> REC</div><div class="countdown" id="countdown">3</div><div id="prompter"></div></section>
+</main>
+<script>
+const scriptEl=document.getElementById('script'),prompter=document.getElementById('prompter'),speedEl=document.getElementById('speed'),fontSizeEl=document.getElementById('fontSize'),widthEl=document.getElementById('width'),stage=document.getElementById('stage'),countdown=document.getElementById('countdown');
+const speedValue=document.getElementById('speedValue'),fontValue=document.getElementById('fontValue'),widthValue=document.getElementById('widthValue');
+let y=window.innerHeight*.70,running=false,last=null,mirror=false;
+const templates={
+rodilla:`¿Dolor de rodilla al subir escaleras?
 
-<div id="pantalla"></div>
+No siempre significa desgaste.
 
-<script src="app.js"></script>
+Puede ser debilidad muscular, mala mecánica, sobrecarga o una lesión tratable.
+
+Lo importante es identificar la causa.
+
+No normalices vivir con dolor.`,
+glp1:`Los medicamentos tipo GLP-1 no son magia.
+
+Ayudan a controlar el apetito, mejorar la saciedad y apoyar el control metabólico.
+
+Pero el verdadero resultado aparece cuando se acompañan de nutrición, fuerza, seguimiento médico y cambios sostenibles.`,
+fisio:`La fisioterapia no es solo masaje.
+
+Es evaluación, movimiento, fuerza, control del dolor y regreso progresivo a tus actividades.
+
+Un buen tratamiento busca que entiendas tu lesión y recuperes confianza en tu cuerpo.`
+};
+function save(){localStorage.setItem('qp_script',scriptEl.value);localStorage.setItem('qp_speed',speedEl.value);localStorage.setItem('qp_font',fontSizeEl.value);localStorage.setItem('qp_width',widthEl.value)}
+function updateText(){prompter.textContent=scriptEl.value;save()}
+function applySettings(){prompter.style.fontSize=fontSizeEl.value+'px';prompter.style.width=widthEl.value+'%';speedValue.textContent=speedEl.value;fontValue.textContent=fontSizeEl.value;widthValue.textContent=widthEl.value+'%';save();render()}
+function render(){prompter.style.transform=(mirror?`scaleX(-1) translateY(${y}px)`: `translateY(${y}px)`)}
+function loop(ts){if(!last)last=ts;const dt=(ts-last)/1000;last=ts;if(running){y-=Number(speedEl.value)*dt;render()}requestAnimationFrame(loop)}
+function startWithCountdown(){let n=3;countdown.textContent=n;countdown.style.display='grid';const timer=setInterval(()=>{n--;if(n>0){countdown.textContent=n}else{clearInterval(timer);countdown.style.display='none';running=true;last=null;stage.classList.add('recording')}},700)}
+document.getElementById('startBtn').onclick=startWithCountdown;
+document.getElementById('pauseBtn').onclick=()=>{running=false;stage.classList.remove('recording')};
+document.getElementById('resetBtn').onclick=()=>{running=false;y=window.innerHeight*.70;stage.classList.remove('recording');render()};
+document.getElementById('mirrorBtn').onclick=()=>{mirror=!mirror;render()};
+document.getElementById('themeBtn').onclick=()=>document.body.classList.toggle('light');
+document.getElementById('clearBtn').onclick=()=>{scriptEl.value='';updateText()};
+document.getElementById('fullscreenBtn').onclick=async()=>{document.body.classList.toggle('full');if(document.documentElement.requestFullscreen){try{await document.documentElement.requestFullscreen()}catch(e){}}y=window.innerHeight*.70;render()};
+document.querySelectorAll('[data-template]').forEach(btn=>{btn.onclick=()=>{scriptEl.value=templates[btn.dataset.template];updateText();y=window.innerHeight*.70;render()}});
+scriptEl.addEventListener('input',updateText);[speedEl,fontSizeEl,widthEl].forEach(el=>el.addEventListener('input',applySettings));
+scriptEl.value=localStorage.getItem('qp_script')||scriptEl.value;speedEl.value=localStorage.getItem('qp_speed')||speedEl.value;fontSizeEl.value=localStorage.getItem('qp_font')||fontSizeEl.value;widthEl.value=localStorage.getItem('qp_width')||widthEl.value;
+updateText();applySettings();render();requestAnimationFrame(loop);
+</script>
 </body>
 </html>
